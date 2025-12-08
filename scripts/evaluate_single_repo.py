@@ -32,29 +32,24 @@ def format_results(results: dict, contributors: dict):
     output.append("EVALUATION RESULTS")
     output.append("=" * 70)
     
-    # Overall score
-    total = results.get('total_score', 0)
-    output.append(f"\n🎯 TOTAL SCORE: {total}/100")
+    output.append(f"\nTotal Score: {results.get('total_score', 0)}/100")
     
-    # Score breakdown
     breakdown = results.get('breakdown', {})
-    output.append("\n📊 SCORE BREAKDOWN:")
-    output.append(f"   Frontend:               {breakdown.get('frontend', 0):>3}/25")
-    output.append(f"   Backend:                {breakdown.get('backend', 0):>3}/25")
-    output.append(f"   Code Quality:           {breakdown.get('code_quality', 0):>3}/20")
-    output.append(f"   Git Practices:          {breakdown.get('git_practices', 0):>3}/15")
-    output.append(f"   Individual Contributions: {breakdown.get('individual_contributions', 0):>3}/15")
+    output.append("\nSCORE BREAKDOWN:")
+    output.append(f"- Frontend: {breakdown.get('frontend', 0)}/25")
+    output.append(f"- Backend: {breakdown.get('backend', 0)}/25")
+    output.append(f"- Code Quality: {breakdown.get('code_quality', 0)}/20")
+    output.append(f"- Git Practices: {breakdown.get('git_practices', 0)}/15")
+    output.append(f"- Individual Contributions: {breakdown.get('individual_contributions', 0)}/15")
     
-    # Individual scores
     individual = results.get('individual_scores', {})
     if individual:
-        output.append("\n👥 INDIVIDUAL SCORES:")
+        output.append("\nINDIVIDUAL SCORES:")
         for username, score in individual.items():
-            # Get real name if available
             name = username
             if contributors and username in contributors:
                 name = contributors[username].get('name', username)
-            output.append(f"   {name}: {score}/100")
+            output.append(f"- {name}: {score}/100")
     
     # Contributors analysis
     if contributors:
@@ -70,32 +65,28 @@ def format_results(results: dict, contributors: dict):
             output.append(f"      Lines:   {net_lines:+,d}")
             output.append(f"      Files:   {data.get('files_modified', 0)}")
     
-    # Strengths
     strengths = results.get('strengths', [])
     if strengths:
-        output.append("\n✅ STRENGTHS:")
+        output.append("\nSTRENGTHS:")
         for strength in strengths:
-            output.append(f"   • {strength}")
+            output.append(f"- {strength}")
     
-    # Weaknesses
     weaknesses = results.get('weaknesses', [])
     if weaknesses:
-        output.append("\n⚠️  AREAS FOR IMPROVEMENT:")
+        output.append("\nAREAS FOR IMPROVEMENT:")
         for weakness in weaknesses:
-            output.append(f"   • {weakness}")
+            output.append(f"- {weakness}")
     
-    # Recommendations
     recommendations = results.get('recommendations', [])
     if recommendations:
-        output.append("\n💡 RECOMMENDATIONS:")
+        output.append("\nRECOMMENDATIONS:")
         for rec in recommendations:
-            output.append(f"   • {rec}")
+            output.append(f"- {rec}")
     
-    # Detailed feedback
     detailed = results.get('detailed_feedback', '')
     if detailed:
-        output.append("\n📝 DETAILED FEEDBACK:")
-        output.append(f"   {detailed}")
+        output.append("\nDETAILED FEEDBACK:")
+        output.append(detailed)
     
     output.append("\n" + "=" * 70)
     

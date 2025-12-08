@@ -41,9 +41,11 @@ def format_evaluation_feedback(results: dict, contributors_data: dict) -> str:
     """Format evaluation results into readable feedback"""
     breakdown = results.get('breakdown', {})
     
-    feedback = f"""SCORE: {results.get('total_score', 0)}/100
+    feedback = f"""EVALUATION RESULTS
+==================
+Total Score: {results.get('total_score', 0)}/100
 
-BREAKDOWN:
+SCORE BREAKDOWN:
 - Frontend: {breakdown.get('frontend', 0)}/25
 - Backend: {breakdown.get('backend', 0)}/25
 - Code Quality: {breakdown.get('code_quality', 0)}/20
@@ -55,7 +57,6 @@ INDIVIDUAL SCORES:"""
     individual_scores = results.get('individual_scores', {})
     if individual_scores:
         for username, score in individual_scores.items():
-            # Try to get the real name from contributors data
             name = username
             if contributors_data and username in contributors_data:
                 name = contributors_data[username].get('name', username)
