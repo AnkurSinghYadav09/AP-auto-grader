@@ -41,9 +41,33 @@ def format_evaluation_feedback(results: dict, contributors_data: dict) -> str:
     """Format evaluation results into readable feedback"""
     breakdown = results.get('breakdown', {})
     
+    # Check for AI detection
+    ai_detection = results.get('ai_detection', {})
+    ai_warning = ""
+    if ai_detection and ai_detection.get('confidence', 0) > 0:
+        detected = ai_detection.get('detected', False)
+        confidence = ai_detection.get('confidence', 0)
+        impact = ai_detection.get('impact_on_score', 'No impact')
+        indicators = ai_detection.get('indicators', [])
+        
+        if detected:
+            ai_warning = f"""
+
+⚠️ AI-GENERATED CODE DETECTED
+Confidence: {confidence}%
+Indicators: {', '.join(indicators) if indicators else 'None'}
+Impact: {impact}"""
+        else:
+            ai_warning = f"""
+
+⚠️ AI CODE INDICATORS FOUND (Below Threshold)
+Confidence: {confidence}%
+Indicators: {', '.join(indicators) if indicators else 'None'}
+Impact: {impact}"""
+    
     feedback = f"""EVALUATION RESULTS
 ==================
-Total Score: {results.get('total_score', 0)}/100
+Total Score: {results.get('total_score', 0)}/100{ai_warning}
 
 SCORE BREAKDOWN:
 - Frontend: {breakdown.get('frontend', 0)}/25
@@ -58,9 +82,13 @@ INDIVIDUAL SCORES:"""
     if individual_scores:
         for username, score in individual_scores.items():
             name = username
+            quality_info = ""
             if contributors_data and username in contributors_data:
                 name = contributors_data[username].get('name', username)
-            feedback += f"\n- {name}: {score}/100"
+                quality_score = contributors_data[username].get('quality_score', 0)
+                if quality_score > 0:
+                    quality_info = f" (Quality: {quality_score}/100)"
+            feedback += f"\n- {name}: {score}/100{quality_info}"
     else:
         feedback += "\n- No individual scores available"
     

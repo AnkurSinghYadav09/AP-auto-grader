@@ -32,7 +32,25 @@ def format_results(results: dict, contributors: dict):
     output.append("EVALUATION RESULTS")
     output.append("=" * 70)
     
-    output.append(f"\nTotal Score: {results.get('total_score', 0)}/100")
+    # Check for AI detection
+    ai_detection = results.get('ai_detection', {})
+    total_score = results.get('total_score', 0)
+    output.append(f"\nTotal Score: {total_score}/100")
+    
+    # Show AI detection if any indicators found (not just when detected)
+    if ai_detection and ai_detection.get('confidence', 0) > 0:
+        detected = ai_detection.get('detected', False)
+        confidence = ai_detection.get('confidence', 0)
+        impact = ai_detection.get('impact_on_score', 'No impact')
+        indicators = ai_detection.get('indicators', [])
+        
+        if detected:
+            output.append("\n⚠️  AI-GENERATED CODE DETECTED")
+        else:
+            output.append("\n⚠️  AI CODE INDICATORS FOUND (Below Threshold)")
+        output.append(f"Confidence: {confidence}%")
+        output.append(f"Indicators: {', '.join(indicators) if indicators else 'None'}")
+        output.append(f"Impact: {impact}")
     
     breakdown = results.get('breakdown', {})
     output.append("\nSCORE BREAKDOWN:")
@@ -47,9 +65,13 @@ def format_results(results: dict, contributors: dict):
         output.append("\nINDIVIDUAL SCORES:")
         for username, score in individual.items():
             name = username
+            quality_info = ""
             if contributors and username in contributors:
                 name = contributors[username].get('name', username)
-            output.append(f"- {name}: {score}/100")
+                quality_score = contributors[username].get('quality_score', 0)
+                if quality_score > 0:
+                    quality_info = f" (Quality: {quality_score}/100)"
+            output.append(f"- {name}: {score}/100{quality_info}")
     
     # Contributors analysis
     if contributors:

@@ -344,6 +344,7 @@ class GitHubProjectEvaluator:
         
         # Detect AI-generated code
         ai_detection = self._detect_ai_generated_code(code_content)
+        logger.info(f"AI Detection Results: {ai_detection}")
         ai_warning = f"\n⚠️ AI-GENERATED CODE DETECTED (Likelihood: {ai_detection['ai_likelihood_score']}%)\nIndicators: {', '.join(ai_detection['indicators'])}" if ai_detection['is_likely_ai'] else ""
         
         # Build evaluation prompt
@@ -438,6 +439,15 @@ Be fair, constructive, and specific in your evaluation."""
             )
             
             result = json.loads(response.text)
+            
+            # Add AI detection results to the evaluation
+            result['ai_detection'] = {
+                'detected': ai_detection['is_likely_ai'],
+                'confidence': ai_detection['ai_likelihood_score'],
+                'indicators': ai_detection['indicators'],
+                'impact_on_score': f"Code quality reduced by {min(ai_detection['ai_likelihood_score'] // 3, 30)} points" if ai_detection['is_likely_ai'] else "No impact"
+            }
+            
             logger.info("Successfully evaluated project")
             return result
             
