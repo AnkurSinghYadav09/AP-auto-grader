@@ -72,7 +72,7 @@ def check_env_file():
         if value and value != f'your_{var.lower()}_here':
             print(f"   ✅ {var} is set")
         else:
-            print(f"   ⚠️  {var} not set - {hint}")
+            print(f"    {var} not set - {hint}")
             all_set = False
     
     # Optional but recommended

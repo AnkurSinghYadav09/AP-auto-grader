@@ -368,6 +368,8 @@ EVALUATION CRITERIA:
    - Code organization
 
 2. Backend (25 points):
+   - **CRITICAL**: Award 0 points if NO BACKEND CODE is visible in samples
+   - Only award points if actual backend files (.js/.ts server files, API routes) are present
    - API design and RESTful principles
    - Database schema design
    - Error handling and validation
@@ -422,18 +424,31 @@ Provide your evaluation in JSON format:
 }}
 
 IMPORTANT SCORING GUIDELINES:
+- **BACKEND SCORING**: If you don't see actual backend code files (server.js, routes/, controllers/), give 0 points for backend
 - For individual_scores: Base 60% on QUALITY (complexity, importance) and 40% on QUANTITY (commits, lines)
 - If AI-generated code detected: Deduct 10-30 points from code_quality depending on extent
 - Consider work distribution fairness: penalize if one person did >80% or <5% of meaningful work
+- BE CONSISTENT: Similar projects with similar code should get similar scores (±5 points)
+- Frontend: Award 18-22 for well-structured React apps, 23-25 for exceptional UX/architecture
+- Backend: Award 0 if missing/not visible, 10-15 for basic CRUD API, 18-22 for solid backend, 23-25 for exceptional
+- Code Quality: Award 12-16 for decent code, 17-20 for excellent documentation/testing
+- Git Practices: Award 8-12 for decent commits, 13-15 for excellent commit discipline
+- Individual Contributions: Award 3-7 if imbalanced (one person >80%), 8-12 for fair distribution, 13-15 for excellent collaboration
 
-Be fair, constructive, and specific in your evaluation."""
+CONSISTENCY CHECK: If the project has:
+- Good frontend + NO backend + no tests + poor collaboration → Total should be 45-55
+- Good frontend + Basic backend + no tests + poor collaboration → Total should be 55-65
+- Good frontend + Good backend + some tests + decent collaboration → Total should be 70-80
+- Excellent frontend + Excellent backend + tests + great collaboration → Total should be 85-95
+
+Be fair, constructive, consistent, and specific in your evaluation."""
         
         try:
             logger.info("Sending evaluation request to Gemini API")
             response = self.model.generate_content(
                 prompt,
                 generation_config=genai.types.GenerationConfig(
-                    temperature=0.7,
+                    temperature=0.3,
                     response_mime_type="application/json"
                 )
             )
