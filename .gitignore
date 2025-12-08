@@ -1,0 +1,39 @@
+# Credentials & Sensitive Data
+credentials/
+*.json
+!rubrics/*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+
+# Environment Variables (IMPORTANT: Contains API keys)
+.env
+.env.local
+.env.*.local
+
+# Python Virtual Environment
+venv/
+.venv/
+env/
+*.pyc
+__pycache__/
+
+# Cloned Repositories (Students' code)
+cloned_repos/
+
+# Data Files
+data/
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
